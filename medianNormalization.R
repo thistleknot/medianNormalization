@@ -2,9 +2,9 @@ library(parallel)
 require(ggplot2)
 require(gridExtra)
 
-numDice = 10
+numDice = sample(3:10,1)
 dice = c(4,6,8,10,12,20,100)
-numPositions = 100
+numPositions = sample(c(3:10,20,50),1)
 
 diceSet = sample(dice,numDice,replace=TRUE)
 
