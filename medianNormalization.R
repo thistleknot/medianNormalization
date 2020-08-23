@@ -71,3 +71,5 @@ plot3 <- ggplot(df, aes(X1.numPositions)) +                    # basic graphical
 
 grid.arrange(plot1, plot2, plot3, ncol=2, nrow=2)
 
+summary(pnorm(zScores))
+summary(pnorm(transformed))
