@@ -44,32 +44,32 @@ upper <- which(zScores>0)
 
 colors <- rainbow(2)
 
-transformed <- zScores
-transformed[lower] <- zScores[lower]*upperFactor
-transformed[upper] <- zScores[upper]*lowerFactor
+reScaled <- zScores
+reScaled[lower] <- zScores[lower]*upperFactor
+reScaled[upper] <- zScores[upper]*lowerFactor
 
 mean(zScores)
-mean(transformed)
+mean(reScaled)
 
-df <- data.frame(rolledSet,pnorm(zScores),pnorm(transformed))
+df <- data.frame(rolledSet,pnorm(zScores),pnorm(reScaled))
 
 plot1 <- ggplot(df, aes(rolledSet)) +                  # basic graphical object
   geom_point(aes(y=pnorm.zScores.), colour="red") +  # first layer
-  geom_line(aes(y=pnorm.transformed.), colour="green")  # second layer
+  geom_line(aes(y=pnorm.reScaled.), colour="green")  # second layer
 
-df <- data.frame(rolledSet,zScores,transformed)
+df <- data.frame(rolledSet,zScores,reScaled)
 
 plot2 <- ggplot(df, aes(rolledSet)) +                  # basic graphical object
   geom_point(aes(y=zScores), colour="red") +  # first layer
-  geom_line(aes(y=transformed), colour="green")  # second layer
+  geom_line(aes(y=reScaled), colour="green")  # second layer
 
-df <- data.frame(1:numPositions,zScores,transformed)
+df <- data.frame(1:numPositions,zScores,reScaled)
 
 plot3 <- ggplot(df, aes(X1.numPositions)) +                    # basic graphical object
   geom_point(aes(y=zScores), colour="red") +  # first layer
-  geom_line(aes(y=transformed), colour="green")  # second layer
+  geom_line(aes(y=reScaled), colour="green")  # second layer
 
 grid.arrange(plot1, plot2, plot3, ncol=2, nrow=2)
 
 summary(pnorm(zScores))
-summary(pnorm(transformed))
+summary(pnorm(reScaled))
