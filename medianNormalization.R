@@ -76,8 +76,10 @@ reFactor2 <- expectedQuartile/actualQuartile
 #limit <- mean(c(abs(min(reScaled)),max(reScaled)))
 #reFactor2 <- maxReScaledZ/limit
 
-reScaled[lower] <- reScaled[lower]*reFactor2
-reScaled[upper] <- reScaled[upper]*reFactor2
+#commented out. I didn't see significant improvments.
+#I'm going to assume that the way the standard deviation is derived is good enough
+#reScaled[lower] <- reScaled[lower]*reFactor2
+#reScaled[upper] <- reScaled[upper]*reFactor2
 
 mean(zScores)
 mean(reScaled)
