@@ -57,13 +57,14 @@ actualQuartile
 
 df <- data.frame(rolledSet,pnorm(zScores),pnorm(reScaled))
 
+'
 plot0 <- ggplot(df, aes(rolledSet)) +                  # basic graphical object
   geom_point(aes(y=pnorm.zScores.), colour="red") +  # first layer
   geom_line(aes(y=pnorm.reScaled.), colour="green")  # second layer
 
 summary(pnorm(zScores))
 summary(pnorm(reScaled))
-
+'
 pnorm(actualQuartile)
 #median(reScaled[upper])
 
@@ -102,7 +103,8 @@ plot3 <- ggplot(df, aes(X1.numPositions)) +                    # basic graphical
   geom_point(aes(y=zScores), colour="red") +  # first layer
   geom_line(aes(y=reScaled), colour="green")  # second layer
 
-grid.arrange(plot0, plot1, plot2, plot3, ncol=2, nrow=2)
+#grid.arrange(plot0, plot1, plot2, plot3, ncol=2, nrow=2)
+grid.arrange(plot1, plot2, plot3, ncol=2, nrow=2)
 
 summary(pnorm(zScores))
 summary(pnorm(reScaled))
