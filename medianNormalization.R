@@ -52,35 +52,34 @@ reScaled[lower] <- zScores[lower]*upperFactor
 reScaled[upper] <- zScores[upper]*lowerFactor
 
 #these are same
-actualQuartile <- abs(mean(reScaled[lower]))
-actualQuartile
+rescaledQuartile <- abs(mean(reScaled[lower]))
+actualQuartile <- mean(c(abs(zScores[lower]),zScores[upper]))
 
 df <- data.frame(rolledSet,pnorm(zScores),pnorm(reScaled))
 
-'
 plot0 <- ggplot(df, aes(rolledSet)) +                  # basic graphical object
   geom_point(aes(y=pnorm.zScores.), colour="red") +  # first layer
   geom_line(aes(y=pnorm.reScaled.), colour="green")  # second layer
 
 summary(pnorm(zScores))
 summary(pnorm(reScaled))
-'
+
 pnorm(actualQuartile)
 #median(reScaled[upper])
 
-expectedQuartile <- abs(qnorm(.25, mean = 0, sd =1))
+#expectedQuartile <- abs(qnorm(.25, mean = 0, sd =1))
 #Confirmed
 #quantile(rnorm(100000),probs=c(.25))
 
-reFactor2 <- expectedQuartile/actualQuartile
+reFactor2 <- actualQuartile/rescaledQuartile
 
 #limit <- mean(c(abs(min(reScaled)),max(reScaled)))
 #reFactor2 <- maxReScaledZ/limit
 
 #commented out. I didn't see significant improvments.
 #I'm going to assume that the way the standard deviation is derived is good enough
-#reScaled[lower] <- reScaled[lower]*reFactor2
-#reScaled[upper] <- reScaled[upper]*reFactor2
+reScaled[lower] <- reScaled[lower]*reFactor2
+reScaled[upper] <- reScaled[upper]*reFactor2
 
 mean(zScores)
 mean(reScaled)
@@ -103,8 +102,8 @@ plot3 <- ggplot(df, aes(X1.numPositions)) +                    # basic graphical
   geom_point(aes(y=zScores), colour="red") +  # first layer
   geom_line(aes(y=reScaled), colour="green")  # second layer
 
-#grid.arrange(plot0, plot1, plot2, plot3, ncol=2, nrow=2)
-grid.arrange(plot1, plot2, plot3, ncol=2, nrow=2)
+grid.arrange(plot0, plot1, plot2, plot3, ncol=2, nrow=2)
+#grid.arrange(plot1, plot2, plot3, ncol=2, nrow=2)
 
 summary(pnorm(zScores))
 summary(pnorm(reScaled))
