@@ -35,12 +35,12 @@ stratifiedMAD <- sqrt(sum(diff(probs, lag = 1, differences = 1) * c(bowleyDeltaM
 
 zScores <- (rolledSet-m)/stratifiedMAD
 
-lowerSum <- abs(sum(zScores[zScores<0]))
-upperSum <- sum(zScores[zScores>0])
-average <- mean(c(lowerSum,upperSum))
+lowerAvg <- mean(abs(zScores[zScores<0]))
+upperAvg <- mean(zScores[zScores>0])
+average <- mean(c(lowerAvg,upperAvg))
 
-lowerFactor <- abs(lowerSum)/average
-upperFactor <- abs(upperSum)/average
+lowerFactor <- lowerAvg/average
+upperFactor <- upperAvg/average
 
 lower <- which(zScores<0)
 upper <- which(zScores>0)
@@ -50,36 +50,6 @@ colors <- rainbow(2)
 reScaled <- zScores
 reScaled[lower] <- zScores[lower]*upperFactor
 reScaled[upper] <- zScores[upper]*lowerFactor
-
-#these are same
-rescaledQuartile <- abs(mean(reScaled[lower]))
-actualQuartile <- mean(c(abs(zScores[lower]),zScores[upper]))
-
-df <- data.frame(rolledSet,pnorm(zScores),pnorm(reScaled))
-
-plot0 <- ggplot(df, aes(rolledSet)) +                  # basic graphical object
-  geom_point(aes(y=pnorm.zScores.), colour="red") +  # first layer
-  geom_line(aes(y=pnorm.reScaled.), colour="green")  # second layer
-
-summary(pnorm(zScores))
-summary(pnorm(reScaled))
-
-pnorm(actualQuartile)
-#median(reScaled[upper])
-
-#expectedQuartile <- abs(qnorm(.25, mean = 0, sd =1))
-#Confirmed
-#quantile(rnorm(100000),probs=c(.25))
-
-reFactor2 <- actualQuartile/rescaledQuartile
-
-#limit <- mean(c(abs(min(reScaled)),max(reScaled)))
-#reFactor2 <- maxReScaledZ/limit
-
-#commented out. I didn't see significant improvments.
-#I'm going to assume that the way the standard deviation is derived is good enough
-reScaled[lower] <- reScaled[lower]*reFactor2
-reScaled[upper] <- reScaled[upper]*reFactor2
 
 mean(zScores)
 mean(reScaled)
@@ -102,8 +72,7 @@ plot3 <- ggplot(df, aes(X1.numPositions)) +                    # basic graphical
   geom_point(aes(y=zScores), colour="red") +  # first layer
   geom_line(aes(y=reScaled), colour="green")  # second layer
 
-grid.arrange(plot0, plot1, plot2, plot3, ncol=2, nrow=2)
-#grid.arrange(plot1, plot2, plot3, ncol=2, nrow=2)
+grid.arrange(plot1, plot2, plot3, ncol=2, nrow=2)
 
 summary(pnorm(zScores))
 summary(pnorm(reScaled))
