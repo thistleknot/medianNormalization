@@ -5,6 +5,7 @@ require(gridExtra)
 numDice = sample(3:10,1)
 dice = c(4,6,8,10,12,20,100)
 numPositions = sample(c(3:10,20,50),1)
+#numPositions=100
 
 maxReScaledZ <- 2.25
 
@@ -50,8 +51,30 @@ reScaled <- zScores
 reScaled[lower] <- zScores[lower]*upperFactor
 reScaled[upper] <- zScores[upper]*lowerFactor
 
-limit <- mean(c(abs(min(reScaled)),max(reScaled)))
-reFactor2 <- maxReScaledZ/limit
+#these are same
+actualQuartile <- abs(mean(reScaled[lower]))
+actualQuartile
+
+df <- data.frame(rolledSet,pnorm(zScores),pnorm(reScaled))
+
+plot0 <- ggplot(df, aes(rolledSet)) +                  # basic graphical object
+  geom_point(aes(y=pnorm.zScores.), colour="red") +  # first layer
+  geom_line(aes(y=pnorm.reScaled.), colour="green")  # second layer
+
+summary(pnorm(zScores))
+summary(pnorm(reScaled))
+
+pnorm(actualQuartile)
+#median(reScaled[upper])
+
+expectedQuartile <- abs(qnorm(.25, mean = 0, sd =1))
+#Confirmed
+#quantile(rnorm(100000),probs=c(.25))
+
+reFactor2 <- expectedQuartile/actualQuartile
+
+#limit <- mean(c(abs(min(reScaled)),max(reScaled)))
+#reFactor2 <- maxReScaledZ/limit
 
 reScaled[lower] <- reScaled[lower]*reFactor2
 reScaled[upper] <- reScaled[upper]*reFactor2
@@ -77,7 +100,7 @@ plot3 <- ggplot(df, aes(X1.numPositions)) +                    # basic graphical
   geom_point(aes(y=zScores), colour="red") +  # first layer
   geom_line(aes(y=reScaled), colour="green")  # second layer
 
-grid.arrange(plot1, plot2, plot3, ncol=2, nrow=2)
+grid.arrange(plot0, plot1, plot2, plot3, ncol=2, nrow=2)
 
 summary(pnorm(zScores))
 summary(pnorm(reScaled))
