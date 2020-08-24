@@ -6,6 +6,8 @@ numDice = sample(3:10,1)
 dice = c(4,6,8,10,12,20,100)
 numPositions = sample(c(3:10,20,50),1)
 
+maxReScaledZ <- 2.25
+
 diceSet = sample(dice,numDice,replace=TRUE)
 
 rolledSet <- sort(unlist(mclapply(1:numPositions, function (x)
@@ -48,6 +50,12 @@ reScaled <- zScores
 reScaled[lower] <- zScores[lower]*upperFactor
 reScaled[upper] <- zScores[upper]*lowerFactor
 
+limit <- mean(c(abs(min(reScaled)),max(reScaled)))
+reFactor2 <- maxReScaledZ/limit
+
+reScaled[lower] <- reScaled[lower]*reFactor2
+reScaled[upper] <- reScaled[upper]*reFactor2
+
 mean(zScores)
 mean(reScaled)
 
@@ -73,3 +81,6 @@ grid.arrange(plot1, plot2, plot3, ncol=2, nrow=2)
 
 summary(pnorm(zScores))
 summary(pnorm(reScaled))
+
+summary(zScores)
+summary(reScaled)
