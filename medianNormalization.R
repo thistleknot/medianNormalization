@@ -5,7 +5,7 @@ require(gridExtra)
 numDice = sample(3:10,1)
 dice = c(4,6,8,10,12,20,100)
 numPositions = sample(c(3:10,20,50),1)
-#numPositions=100
+#numPositions=50
 
 maxReScaledZ <- 2.25
 
@@ -39,8 +39,15 @@ lowerAvg <- mean(abs(zScores[zScores<0]))
 upperAvg <- mean(zScores[zScores>0])
 average <- mean(c(lowerAvg,upperAvg))
 
-lowerFactor <- lowerAvg/average
-upperFactor <- upperAvg/average
+expectedQuartile <- abs(qnorm(.25, mean = 0, sd =1))
+factorVal <- expectedQuartile/average
+
+#Confirmed
+
+#quantile(rnorm(100000),probs=c(.25))
+
+lowerFactor <- lowerAvg/average*factorVal
+upperFactor <- upperAvg/average*factorVal
 
 lower <- which(zScores<0)
 upper <- which(zScores>0)
@@ -50,6 +57,7 @@ colors <- rainbow(2)
 reScaled <- zScores
 reScaled[lower] <- zScores[lower]*upperFactor
 reScaled[upper] <- zScores[upper]*lowerFactor
+
 
 mean(zScores)
 mean(reScaled)
