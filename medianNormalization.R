@@ -7,7 +7,7 @@ library(crayon)
 numDice = sample(3:10,1)
 dice = c(4,6,8,10,12,20,100)
 numPositions = sample(c(50),1)
-#numPositions = 50
+#numPositions = 100
 
 diceSet = sample(dice,numDice,replace=TRUE)
 
@@ -20,8 +20,6 @@ rolledSet <- sort(unlist(mclapply(1:numPositions, function (x)
   })
   return(sum(unlist(roll)))
 })))
-
-plot(rolledSet)
 
 probs <- c(0, .1, .25, .5, .75, .9, 1)
 bowleysSummary <- quantile(rolledSet, probs)
@@ -77,18 +75,19 @@ newMean <- mean(c(twentyFivePercent,seventyFivePercent))
 newSdev <- (seventyFivePercent-twentyFivePercent)/(expectedQuartile*2)
 
 newSetZ <- (rolledSet-newMean)/newSdev
-plot(newSetZ,rolledSet)
 newSetP <- pnorm(newSetZ)
-plot(newSetP,rolledSet)
+
+#linear, 50% is median/median, 25/75% move a bit
+newSdev2 <- ((seventyFivePercent-m)+(m-twentyFivePercent))/(expectedQuartile*2)
+newSetZ2 <- (rolledSet-m)/newSdev2
+newSetP2 <- pnorm(newSetZ2)
 
 mean(c(twentyFivePercentRescaled,seventyFivePercentRescaled))
 
 #linear, preserves median at 50%
 newSdevRescaled <-  (seventyFivePercentRescaled-twentyFivePercentRescaled)/(expectedQuartile*2)
 newSetZRescaled <- (rolledSet-m)/newSdevRescaled
-plot(newSetZRescaled,rolledSet)
 newSetPRescaled <- pnorm(newSetZRescaled)
-plot(newSetPRescaled,rolledSet)
 
 cat(yellow(paste ("\n","orange 25/75%")))
 cat(yellow(paste ("\n",twentyFivePercentRescaled,seventyFivePercentRescaled)))
@@ -96,21 +95,23 @@ cat(yellow(paste ("\n",twentyFivePercentRescaled,seventyFivePercentRescaled)))
 cat(paste("\n","actual","\n"))
 print(summary(rolledSet))
 
-df <- data.frame(rolledSet,pnorm(zScores),pnorm(reScaled),newSetP,newSetPRescaled)
+df <- data.frame(rolledSet,pnorm(zScores),pnorm(reScaled),newSetP,newSetPRescaled, newSetP2)
 
 plot1 <- ggplot(df, aes(rolledSet)) +                  # basic graphical object
   geom_point(aes(y=pnorm.zScores.), colour="red") +  # first layer
   geom_line(aes(y=pnorm.reScaled.), colour="green") +  # second layer
   geom_line(aes(y=newSetP), colour="blue") + # third layer
-  geom_line(aes(y=newSetPRescaled), colour="orange")  # fourth layer
+  geom_line(aes(y=newSetPRescaled), colour="orange") +  # fourth layer
+  geom_line(aes(y=newSetP2), colour="magenta")  # fifth layer
 
-df <- data.frame(rolledSet,zScores,reScaled,newSetZRescaled,newSetZ)
+df <- data.frame(rolledSet,zScores,reScaled,newSetZRescaled,newSetZ,newSetZ2)
 
 plot2 <- ggplot(df, aes(rolledSet)) +                  # basic graphical object
   geom_point(aes(y=zScores), colour="red") +  # first layer
   geom_line(aes(y=reScaled), colour="green") + # second layer
   geom_line(aes(y=newSetZRescaled), colour="blue") + # third layer
-  geom_line(aes(y=newSetZ), colour="orange")  # fourth layer
+  geom_line(aes(y=newSetZ), colour="orange") +  # fourth layer
+  geom_line(aes(y=newSetZ2), colour="magenta")  # fourth layer
 
 df <- data.frame(1:numPositions,zScores,reScaled,newSetZRescaled,newSetZ)
 
@@ -118,7 +119,8 @@ plot3 <- ggplot(df, aes(X1.numPositions)) +                    # basic graphical
   geom_point(aes(y=zScores), colour="red") +  # first layer
   geom_line(aes(y=reScaled), colour="green") +  # second layer
   geom_line(aes(y=newSetZRescaled), colour="blue") + # third layer
-  geom_line(aes(y=newSetZ), colour="orange")  # fourth layer
+  geom_line(aes(y=newSetZ), colour="orange") +  # fourth layer
+  geom_line(aes(y=newSetZ), colour="magenta")  # fourth layer
 
 grid.arrange(plot1, plot2, plot3, ncol=2, nrow=2)
 
@@ -137,4 +139,9 @@ print(summary(newSetZ))
 cat (yellow(paste ( "\n","Orange:","newSetPRescaled, median 50%, avg !50%, linear:", "\n", collapse="")))
 print(summary(newSetPRescaled))
 print(summary(newSetZRescaled))
+
+cat (magenta(paste ( "\n","magenta:","newSetP2, median 50%, avg 50%, linear:", "\n", collapse="")))
+print(summary(newSetP2))
+print(summary(newSetZ2))
+
 }
