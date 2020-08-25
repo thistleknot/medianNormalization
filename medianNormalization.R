@@ -6,8 +6,8 @@ library(crayon)
 {
 numDice = sample(3:10,1)
 dice = c(4,6,8,10,12,20,100)
-numPositions = sample(c(50),1)
-#numPositions = 100
+#numPositions = sample(c(3:10,20,50),1)
+numPositions = 50
 
 diceSet = sample(dice,numDice,replace=TRUE)
 
@@ -72,12 +72,14 @@ seventyFivePercentRescaled <- m+expectedQuartile*stratifiedMAD*factorVal
 m
 #linear, but 50% is no longe median, it's close and within 25 to 75%
 newMean <- mean(c(twentyFivePercent,seventyFivePercent))
+#newSdev <- (seventyFivePercent-twentyFivePercent)/((lowerAvg+upperAvg)/2)
 newSdev <- (seventyFivePercent-twentyFivePercent)/(expectedQuartile*2)
 
 newSetZ <- (rolledSet-newMean)/newSdev
 newSetP <- pnorm(newSetZ)
 
 #linear, 50% is median/median, 25/75% move a bit
+#newSdev2 <- ((seventyFivePercent-m)+(m-twentyFivePercent))/((lowerAvg+upperAvg)/2)
 newSdev2 <- ((seventyFivePercent-m)+(m-twentyFivePercent))/(expectedQuartile*2)
 newSetZ2 <- (rolledSet-m)/newSdev2
 newSetP2 <- pnorm(newSetZ2)
