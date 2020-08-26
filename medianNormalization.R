@@ -3,7 +3,7 @@ require(ggplot2)
 require(gridExtra)
 library(crayon)
 
-{
+
 numDice = sample(3:10,1)
 dice = c(4,6,8,10,12,20,100)
 #numPositions = sample(c(3:10,20,50),1)
@@ -21,6 +21,7 @@ rolledSet <- sort(unlist(mclapply(1:numPositions, function (x)
   return(sum(unlist(roll)))
 })))
 
+{
 probs <- c(0, .1, .25, .5, .75, .9, 1)
 bowleysSummary <- quantile(rolledSet, probs)
 
@@ -33,8 +34,8 @@ stratifiedMAD <- sqrt(sum(diff(probs, lag = 1, differences = 1) * c(bowleyDeltaM
 
 zScores <- (rolledSet-m)/stratifiedMAD
 
-lowerAvg <- mean(abs(zScores[zScores<0]))
-upperAvg <- mean(zScores[zScores>0])
+lowerAvg <- mean(abs(c(zScores[zScores<0])))
+upperAvg <- mean(c(zScores[zScores>0]))
 average <- mean(c(lowerAvg,upperAvg))
 
 expectedQuartile <- abs(qnorm(.25, mean = 0, sd =1))
@@ -142,7 +143,7 @@ cat (yellow(paste ( "\n","Orange:","newSetPRescaled, median 50%, avg !50%, linea
 print(summary(newSetPRescaled))
 print(summary(newSetZRescaled))
 
-cat (magenta(paste ( "\n","magenta:","newSetP2, median 50%, avg 50%, linear:", "\n", collapse="")))
+cat (magenta(paste ( "\n","magenta:","newSetP2, median 50%, avg ~50%, linear:", "\n", collapse="")))
 print(summary(newSetP2))
 print(summary(newSetZ2))
 
