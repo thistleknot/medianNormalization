@@ -68,8 +68,8 @@ newZ <- z
 #newZ[lower] <- z[lower]/lowerAvg*factor
 #newZ[upper] <- z[upper]/upperAvg*factor
 
-newZ[lower] <- z[lower]*lowerSum/factor
-newZ[upper] <- z[upper]*upperSum/factor
+newZ[lower] <- z[lower]*factor/lowerSum
+newZ[upper] <- z[upper]*factor/upperSum
 
 
 sum(abs(newZ[lower]))
